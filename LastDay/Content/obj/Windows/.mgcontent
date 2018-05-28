@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>D:/project/LastDay/LastDay/LastDay/Content/Zombie.png</File>
+    <File>D:/project/LastDay/LastDay/LastDay/Content/Player.png</File>
+    <File>D:/project/LastDay/LastDay/LastDay/Content/font.spritefont</File>
+    <File>D:/project/LastDay/LastDay/LastDay/Content/background.png</File>
+    <File>D:/project/LastDay/LastDay/LastDay/Content/Bullet.png</File>
+  </SourceFiles>
+</SourceFileCollection>
