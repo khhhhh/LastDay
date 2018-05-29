@@ -12,7 +12,6 @@ namespace LastDay
     {
         public List<Bullet> bullets = new List<Bullet>();
 
-
         public Weapon(Texture2D texture) : base(texture) { }
 
         public void UpdateBullets(Thing thing)
@@ -37,8 +36,6 @@ namespace LastDay
 
         public void Shoot(Thing thing)
         {
-            float speed = thing.Speed;
-            thing.Speed = speed * 0.1f;
             Bullet bullet = new Bullet(Texture);
             bullet.velocity = new Vector2((float)Math.Cos(thing.Rotation - (float)Math.PI / 2), (float)Math.Sin(thing.Rotation - (float)Math.PI / 2)) * 20f;
             bullet.Position = thing.Position + bullet.velocity;
@@ -46,9 +43,9 @@ namespace LastDay
 
             if (bullets.Count < 20)
                 bullets.Add(bullet);
-
-            thing.Speed = speed;
         }
+
+
 
     }
 }

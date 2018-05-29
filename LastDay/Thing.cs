@@ -13,13 +13,11 @@ namespace LastDay
 
         protected float rotation;
 
-
         public virtual float Health { get; set; }
         public float Speed;
         public float Rotation => rotation;
         public Texture2D Texture => texture;
         public Rectangle Rectangle => new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
-
         public Vector2 Position
         {
             get { return position; }

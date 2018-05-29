@@ -8,25 +8,32 @@ namespace LastDay
 {
     class Zombie : Thing
     {
-        float Xt = 0, Yt = 0;
         public override float Health { get; set; } = 100;
+
+        Color color = Color.White;
+
+        
+        public void GetDamage()
+        {
+            Health -= 20;
+            color = Color.Red;
+        }
 
         public Zombie(Texture2D texture) : base(texture)
         {
-            Speed = 5;
-
+            Speed = 3;
         }
+
+        Vector2 direction = Vector2.Zero;
 
         public void Move(Thing thing)
         {
             if (!thing.Rectangle.Intersects(this.Rectangle))
             {
-                Xt = X;
-                Yt = Y;
                 float x = thing.X + thing.Width / 2;
                 float y = thing.Y + thing.Height / 2;
                 float norm = Vector2.Distance(Position, thing.Position);
-                Vector2 direction = new Vector2((Position.X - x) / norm, (Position.Y - y) / norm);
+                direction = new Vector2((Position.X - x) / norm, (Position.Y - y) / norm);
                 string str = thing.GetType().Name;
 
                 X -= Speed * direction.X;
@@ -34,21 +41,29 @@ namespace LastDay
             }
             else
             {
-                if (thing.GetType().Name == "Player")
                     thing.Health -= 0.3f;
-
             }
         }
-
 
         public void Cross(List<Zombie> list)
         {
             foreach (var zombie in list)
-                if (Rectangle.Intersects(zombie.Rectangle))
+                if (Rectangle.Intersects(zombie.Rectangle) && !(zombie == this))
                 {
-                    X = Xt;
-                    Y = Yt;
+                    zombie.X += Math.Sign(direction.X) * 1;
+                    zombie.Y += Math.Sign(direction.Y) * 1;
+                
+                    X -= Math.Sign(direction.X) * 1;
+                    Y -= Math.Sign(direction.Y) * 1;
                 }
+        }
+
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(Texture, Position, null, color, Rotation,
+                 new Vector2(Width / 2, Height / 2), 1f, SpriteEffects.None, 1);
+            color = Color.White;
         }
     }
 }

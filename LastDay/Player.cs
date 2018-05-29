@@ -23,17 +23,14 @@ namespace LastDay
             rotation = (float)Math.Atan2(Y, X) + (float)Math.PI / 2;
         }
 
-
         public void UpdateBullets()
         {
             weapon.UpdateBullets(this);
         }
-
         public void Shoot()
         {
             weapon.Shoot(this);
         }
-
         public void Move(KeyboardState keyboard)
         {
             Keys[] keys = keyboard.GetPressedKeys();
