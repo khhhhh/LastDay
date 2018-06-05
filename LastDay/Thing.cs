@@ -5,11 +5,10 @@ using System;
 
 namespace LastDay
 {
-    class Thing
+    abstract class Thing
     {
         Texture2D texture;
         Vector2 position;
-        Rectangle rectangle;
 
         protected float rotation;
 
@@ -17,7 +16,15 @@ namespace LastDay
         public float Speed;
         public float Rotation => rotation;
         public Texture2D Texture => texture;
-        public Rectangle Rectangle => new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
+        public Rectangle Rectangle {
+            get
+            {
+                if(Rotation >= Math.PI / 2)
+                {
+                }
+                return new Rectangle((int)(X - Width / 2), (int)(Y - Height / 2), (int)Width, (int)Height);
+            }
+        }
         public Vector2 Position
         {
             get { return position; }
@@ -41,14 +48,13 @@ namespace LastDay
         public Thing(Texture2D texture)
         {
             this.texture = texture;
-            rectangle = new Rectangle((int)X, (int)Y, (int)(Width * 0.3f), (int)(Height * 0.3f));
         }
 
         public virtual void CalculateRotation(float x, float y)
         {
             float X = x - this.X;
             float Y = y - this.Y;
-            rotation = (float)Math.Atan2(Y, X) + (float) Math.PI / 2;
+            rotation = (float)Math.Atan2(Y, X);
         }
     }
 }

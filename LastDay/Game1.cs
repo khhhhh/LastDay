@@ -13,25 +13,33 @@ namespace LastDay
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        int zombieValue = 20;
+
+        int zombieValue = 0;
         float zombieSpeed = 4;
+        int day = 0;
+
+        int kills = 0;
 
         Player player;
         Texture2D zombieTexture;
         List<Zombie> zombies = new List<Zombie>();
         Weapon weapon;
         SpriteFont font;
-
-        Texture2D barFullHP;
-        Texture2D barCurrentHP;
+        SpriteFont font2;
 
         Background background;
         Camera camera;
 
-        int time;
+        double time;
         bool createZombies = false;
 
-        bool GameOver = false;
+        //Working With Text
+
+        int signTransparency = -3;
+        Texture2D blackScreen;
+        int textTransparency = 0;
+        bool nextLevel = true;
+        bool gameOver = false;
 
         MouseState mouse;
         KeyboardState keyboard;
@@ -58,7 +66,6 @@ namespace LastDay
             graphics.PreferredBackBufferWidth = (int)displaySize.X;
             graphics.PreferredBackBufferHeight = (int)displaySize.Y;
             graphics.IsFullScreen = true;
-
             graphics.ApplyChanges();
 
             camera = new Camera(GraphicsDevice.Viewport);
@@ -71,13 +78,17 @@ namespace LastDay
             player = new Player(Content.Load<Texture2D>("Player"));
             weapon = new Weapon(Content.Load<Texture2D>("Bullet"));
             zombieTexture = Content.Load<Texture2D>("Zombie");
-            barFullHP = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            barFullHP.SetData(new Color[] { Color.Gray });
+            player.BarFullHP = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            player.BarFullHP.SetData(new Color[] { Color.Gray });
 
-            barCurrentHP = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            barCurrentHP.SetData(new Color[] { Color.Red });
+            blackScreen = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            blackScreen.SetData(new Color[] { Color.Black });
+
+            player.BarCurrentHP = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            player.BarCurrentHP.SetData(new Color[] { Color.Red });
 
             font = Content.Load<SpriteFont>("font");
+            font2 = Content.Load<SpriteFont>("font2");
             player.weapon = weapon;
             player.Position = new Vector2(
               (displaySize.X / 2),
@@ -97,7 +108,7 @@ namespace LastDay
 
         void CreateZombies()
         {
-            zombieSpeed += 0.4f;
+            zombieSpeed += 0.1f;
             Random rand = new Random();
             for (int i = 0; i < zombieValue; i++)
             {
@@ -121,6 +132,7 @@ namespace LastDay
                 if (zombies[i].Health == 0)
                 {
                     zombies.RemoveAt(i);
+                    kills++;
                 }
             }
         }
@@ -131,19 +143,34 @@ namespace LastDay
             mouse = Mouse.GetState();
             keyboard = Keyboard.GetState();
 
-            if (!GameOver)
+            if (!gameOver)
             {
                 camera.Update(gameTime, player);
 
                 if (zombies.Count == 0 && !createZombies)
                 {
-                    time = gameTime.TotalGameTime.Seconds;
+                    time = gameTime.TotalGameTime.TotalSeconds;
+                    nextLevel = true;
+                    day++;
                     createZombies = true;
+
+                    textTransparency = 0;
+                    signTransparency *= -1;
                 }
 
-                if (gameTime.TotalGameTime.Seconds - time > 3 && createZombies)
+                if (nextLevel)
                 {
-                    zombieValue += 10;
+                    if (textTransparency >= 255)
+                        signTransparency *= -1;
+
+                    textTransparency += signTransparency;
+                }
+
+                if (gameTime.TotalGameTime.TotalSeconds - time > 3 && createZombies)
+                {
+                    zombieValue += 5;
+                    nextLevel = false;
+
                     CreateZombies();
                     createZombies = false;
                 }
@@ -180,18 +207,21 @@ namespace LastDay
 
                 if(player.Health  < 0)
                 {
-                    GameOver = true;
+                    gameOver = true;
+                    textTransparency = 0;
                 }
             }
+            else
+            {
+                textTransparency += 10;
+            }
+
 
             if (keyboard.IsKeyDown(Keys.Escape))
                 Exit();
 
             base.Update(gameTime);
-
         }
-
-
 
 
         protected override void Draw(GameTime gameTime)
@@ -208,22 +238,27 @@ namespace LastDay
             foreach (var bullet in player.weapon.bullets)
                 bullet.Draw(spriteBatch);
 
-            spriteBatch.Draw(player.Texture, player.Position, null, Color.White, player.Rotation,
-                new Vector2(player.Width / 2, player.Height / 2), 1f, SpriteEffects.None, 1);
 
-
+            player.Draw(spriteBatch);
 
             foreach (var zombie in zombies)
                 zombie.Draw(spriteBatch);
 
-            Rectangle rec = new Rectangle((int)(player.X - displaySize.X / 2) + 70, (int)(player.Y - displaySize.Y / 2) + 50, 300, 30);
-            spriteBatch.Draw(barFullHP, rec, Color.White);
-            rec.Width = (int)(300 * (player.Health / 100));
-            spriteBatch.Draw(barCurrentHP, rec, Color.White);
+            Vector2 rec = new Vector2(player.X + displaySize.X / 2 - 70, player.Y - displaySize.Y / 2 + 50);
 
-            if (GameOver)
+            spriteBatch.DrawString(font2, $"Kills: {kills}", rec, Color.White);
+
+            if (gameOver)
             {
-                spriteBatch.DrawString(font, "Game Over", new Vector2(player.X - 150, player.Y - 40), Color.Red, 0f, Vector2.Zero, 4f, SpriteEffects.None, 1);
+                spriteBatch.Draw(blackScreen, new Rectangle((int)(player.X - displaySize.X * 2), (int)(player.Y - displaySize.Y * 2), (int)displaySize.X * 3, (int)displaySize.Y * 3), new Color(Color.Black, textTransparency));
+                spriteBatch.DrawString(font, "Game Over", new Vector2(player.X - 150, player.Y - 40), new Color(255, 0, 0, textTransparency), 0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
+            }
+
+            if (nextLevel)
+            {
+                spriteBatch.Draw(blackScreen, new Rectangle((int)(player.X - displaySize.X * 2), (int)(player.Y - displaySize.Y * 2), (int)displaySize.X * 3, (int)displaySize.Y * 3), new Color(Color.Black, textTransparency));
+                spriteBatch.DrawString(font, $"Day {day}", new Vector2(player.X - 150, player.Y - 40), new Color(Color.White, textTransparency), 0f, Vector2.Zero, 1f, SpriteEffects.None, 1);
+
             }
 
             spriteBatch.End();

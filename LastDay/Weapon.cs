@@ -37,7 +37,7 @@ namespace LastDay
         public void Shoot(Thing thing)
         {
             Bullet bullet = new Bullet(Texture);
-            bullet.velocity = new Vector2((float)Math.Cos(thing.Rotation - (float)Math.PI / 2), (float)Math.Sin(thing.Rotation - (float)Math.PI / 2)) * 20f;
+            bullet.velocity = new Vector2((float)Math.Cos(thing.Rotation /*- (float)Math.PI / 2 */), (float)Math.Sin(thing.Rotation /*- (float)Math.PI / 2 */) ) * 20f;
             bullet.Position = thing.Position + bullet.velocity;
             bullet.isVisible = true;
 

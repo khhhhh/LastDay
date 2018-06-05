@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>D:/project/LastDay/LastDay/LastDay/Content/Zombie.png</SourceFile>
-  <SourceTime>2018-05-24T10:00:51.7698456+03:00</SourceTime>
+  <SourceTime>2018-06-05T19:27:41.680813+03:00</SourceTime>
   <DestFile>D:/project/LastDay/LastDay/LastDay/Content/bin/Windows/Zombie.xnb</DestFile>
-  <DestTime>2018-05-26T01:15:27.1443492+03:00</DestTime>
+  <DestTime>2018-06-05T19:28:18.0699004+03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T18:05:36+03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

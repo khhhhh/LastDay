@@ -30,6 +30,7 @@ namespace LastDay
         {
             if (!Rectangle.Intersects(thing.Rectangle))
             {
+
                 if (thing.X <= -4 * Width + thing.Width / 2)
                 {
                     thing.X = -4 * Width + thing.Width / 2;
